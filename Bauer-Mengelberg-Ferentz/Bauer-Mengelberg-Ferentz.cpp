@@ -1,11 +1,12 @@
 // Bauer-Mengelberg-Ferentz.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
+#include "bauer_algorithm.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	generateAllIntervalRows("D:\\eleven_interval.json");
+	return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
