@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClCompile Include="Bauer-Mengelberg-Ferentz.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bauer_algorithm.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
