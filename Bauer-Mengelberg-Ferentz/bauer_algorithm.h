@@ -43,10 +43,6 @@ void generateAllIntervalRows(std::string destinationFile)
 			found[numFound][i] = permutation[i];
 		numFound++;
 
-		std::cout << "Found " << numFound << " row generators.\n";
-		if (numFound > 5000)
-			break;
-
 		// move to the next permutation
 		nextPermutation(permutation);
 	}
@@ -59,7 +55,7 @@ void generateAllIntervalRows(std::string destinationFile)
 		delete[] found[i];
 	delete[] found;
 
-	std::cout << "Done. Found " << numFound << "row generators.\n";
+	std::cout << "Done. Found " << numFound << " row generators.\n";
 }
 
 /// <summary>
