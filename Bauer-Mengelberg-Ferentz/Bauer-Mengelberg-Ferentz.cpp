@@ -24,9 +24,11 @@
 
 #include "bauer_algorithm.h"
 #include "bauer_trichord.h"
+#include "bauer_trichord_ten.h"
+#include "bauer_trichord_babbitt.h"
 
 int main()
 {
-	generateAllTrichordRows("D:\\all_trichord.json");
+	generateTenTrichordRows("D:\\ten_trichord.json");
 	return 0;
 }

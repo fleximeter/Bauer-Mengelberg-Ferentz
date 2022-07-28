@@ -26,5 +26,11 @@
     <ClInclude Include="bauer_trichord.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bauer_trichord_babbitt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bauer_trichord_ten.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

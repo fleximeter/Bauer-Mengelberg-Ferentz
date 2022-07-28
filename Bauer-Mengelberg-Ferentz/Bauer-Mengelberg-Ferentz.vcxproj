@@ -132,6 +132,8 @@
   <ItemGroup>
     <ClInclude Include="bauer_algorithm.h" />
     <ClInclude Include="bauer_trichord.h" />
+    <ClInclude Include="bauer_trichord_babbitt.h" />
+    <ClInclude Include="bauer_trichord_ten.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

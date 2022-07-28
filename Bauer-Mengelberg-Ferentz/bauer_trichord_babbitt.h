@@ -3,7 +3,9 @@
 * Author: Jeff Martin
 *
 * This file contains an adaptation of the Bauer-Mengelberg-Ferentz algorithm,
-* for finding all-trichord rows.
+* for finding all-trichord row generators after Babbitt. These rows contain
+* ten unique imbricated trichords (not considering rotation), excluding
+* set-classes [036] and [048].
 *
 * Copyright © 2022 by Jeffrey Martin. All rights reserved.
 * Email: jmartin@jeffreymartincomposer.com
@@ -23,23 +25,23 @@
 * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef BAUERT
-#define BAUERT
+#ifndef BAUERTB
+#define BAUERTB
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
+#include "bauer_trichord.h"
 
-void generateAllTrichordRows(std::string destinationFile);
-int isValidTrichordRow(int* permutation, int trichordTable[12][12]);
-void loadIntervalTable(int table[12][12]);
-void nextTrichordRow(int* permutation, int trichordTable[12][12]);
-void writeTrichordRowsToFile(std::string path, std::vector<int*> found);
+void generateBabbittAllTrichordRows(std::string destinationFile);
+int isValidBabbittTrichordRow(int* permutation, int trichordTable[12][12]);
+void nextBabbittTrichordRow(int* permutation, int trichordTable[12][12]);
+void writeBabbittTrichordRowsToFile(std::string path, std::vector<int*> found);
 
 /// <summary>
 /// Generates the all-interval rows
 /// </summary>
-void generateAllTrichordRows(std::string destinationFile)
+void generateBabbittAllTrichordRows(std::string destinationFile)
 {
 	int permutation[12] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 	std::vector<int*> found;
@@ -48,7 +50,7 @@ void generateAllTrichordRows(std::string destinationFile)
 	loadIntervalTable(trichordTable);
 
 	std::cout << "Starting...\n";
-	nextTrichordRow(permutation, trichordTable);
+	nextBabbittTrichordRow(permutation, trichordTable);
 
 	// consider each possible permutation
 	while (permutation[0] < 1)
@@ -60,11 +62,11 @@ void generateAllTrichordRows(std::string destinationFile)
 		found.push_back(newFound);
 
 		// move to the next permutation
-		nextTrichordRow(permutation, trichordTable);
+		nextBabbittTrichordRow(permutation, trichordTable);
 	}
 
 	// export the row generators
-	writeTrichordRowsToFile(destinationFile, found);
+	writeBabbittTrichordRowsToFile(destinationFile, found);
 
 	// cleanup
 	for (int i = 0; i < found.size(); i++)
@@ -78,7 +80,7 @@ void generateAllTrichordRows(std::string destinationFile)
 /// </summary>
 /// <param name="permutation">A permutation</param>
 /// <returns>The index of the pc that failed, or -1 if the permutation is valid</returns>
-int isValidTrichordRow(int* permutation, int trichordTable[12][12])
+static int isValidBabbittTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	int trichords[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	int trichordTable1[12][12];
@@ -90,11 +92,11 @@ int isValidTrichordRow(int* permutation, int trichordTable[12][12])
 			trichordTable1[i][j] = trichordTable[i][j];
 	}
 
-	// Calculate the intervals, wrapping around
-	int intervals[12];
-	for (int i = 0; i < 12; i++)
+	// Calculate the intervals
+	int intervals[11];
+	for (int i = 0; i < 10; i++)
 	{
-		intervals[i] = permutation[(i + 1) % 12] - permutation[i];
+		intervals[i] = permutation[i + 1] - permutation[i];
 		if (intervals[i] < 0)
 			intervals[i] += 12;
 	}
@@ -102,9 +104,18 @@ int isValidTrichordRow(int* permutation, int trichordTable[12][12])
 	// Look up each imbricated trichord, wrapping around. If we have duplicate trichords,
 	// find the pitch that made the duplicate trichord and return its index (unless this
 	// is the first or second pitch in the row)
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		int idx = trichordTable[intervals[i]][intervals[(i + 1) % 12]] - 1;
+		int idx = trichordTable[intervals[i]][intervals[i + 1]] - 1;
+		// we can't allow set-classes [036] and [048]
+		if (idx == 10 || idx == 12)
+		{
+			if (i < 10)
+				return i + 2;
+			else
+				return 12;
+		}
+		// if we have duplicate trichords
 		if (trichords[idx] > 0)
 		{
 			if (i < 10)
@@ -118,129 +129,11 @@ int isValidTrichordRow(int* permutation, int trichordTable[12][12])
 }
 
 /// <summary>
-/// Loads a table of trichord spacing intervals
-/// </summary>
-/// <param name="table">A 2D array of size 12x12</param>
-void loadIntervalTable(int table[12][12])
-{
-	table[2][11] = 1;
-	table[11][2] = 1;
-	table[1][10] = 1;
-	table[11][11] = 1;
-	table[1][1] = 1;
-	table[10][1] = 1;
-	table[3][11] = 2;
-	table[3][10] = 2;
-	table[10][3] = 2;
-	table[2][9] = 2;
-	table[1][9] = 2;
-	table[11][10] = 2;
-	table[10][11] = 2;
-	table[9][2] = 2;
-	table[2][1] = 2;
-	table[11][3] = 2;
-	table[9][1] = 2;
-	table[1][2] = 2;
-	table[3][8] = 3;
-	table[11][4] = 3;
-	table[8][1] = 3;
-	table[9][4] = 3;
-	table[4][9] = 3;
-	table[3][1] = 3;
-	table[4][11] = 3;
-	table[11][9] = 3;
-	table[1][8] = 3;
-	table[8][3] = 3;
-	table[9][11] = 3;
-	table[1][3] = 3;
-	table[8][5] = 4;
-	table[11][8] = 4;
-	table[8][11] = 4;
-	table[1][4] = 4;
-	table[4][7] = 4;
-	table[1][7] = 4;
-	table[7][1] = 4;
-	table[5][8] = 4;
-	table[7][4] = 4;
-	table[5][11] = 4;
-	table[4][1] = 4;
-	table[11][5] = 4;
-	table[6][7] = 5;
-	table[7][11] = 5;
-	table[6][11] = 5;
-	table[5][1] = 5;
-	table[7][6] = 5;
-	table[1][6] = 5;
-	table[1][5] = 5;
-	table[5][6] = 5;
-	table[11][7] = 5;
-	table[11][6] = 5;
-	table[6][1] = 5;
-	table[6][5] = 5;
-	table[4][10] = 6;
-	table[2][2] = 6;
-	table[10][10] = 6;
-	table[8][2] = 6;
-	table[2][8] = 6;
-	table[10][4] = 6;
-	table[7][2] = 7;
-	table[3][7] = 7;
-	table[10][9] = 7;
-	table[2][7] = 7;
-	table[2][3] = 7;
-	table[3][2] = 7;
-	table[9][10] = 7;
-	table[5][10] = 7;
-	table[9][5] = 7;
-	table[10][5] = 7;
-	table[5][9] = 7;
-	table[7][3] = 7;
-	table[8][6] = 8;
-	table[4][6] = 8;
-	table[6][2] = 8;
-	table[6][4] = 8;
-	table[4][2] = 8;
-	table[6][8] = 8;
-	table[8][10] = 8;
-	table[2][4] = 8;
-	table[10][8] = 8;
-	table[2][6] = 8;
-	table[10][6] = 8;
-	table[6][10] = 8;
-	table[7][10] = 9;
-	table[2][5] = 9;
-	table[5][2] = 9;
-	table[5][5] = 9;
-	table[10][7] = 9;
-	table[7][7] = 9;
-	table[3][6] = 10;
-	table[3][3] = 10;
-	table[6][9] = 10;
-	table[9][9] = 10;
-	table[6][3] = 10;
-	table[9][6] = 10;
-	table[9][7] = 11;
-	table[3][5] = 11;
-	table[8][7] = 11;
-	table[3][4] = 11;
-	table[4][3] = 11;
-	table[4][5] = 11;
-	table[7][8] = 11;
-	table[8][9] = 11;
-	table[9][8] = 11;
-	table[5][3] = 11;
-	table[7][9] = 11;
-	table[5][4] = 11;
-	table[8][8] = 12;
-	table[4][4] = 12;
-}
-
-/// <summary>
 /// Updates the permutation to the next valid one
 /// </summary>
 /// <param name="permutation">The permutation</param>
 /// <param name="criticalIndex">The critical index, if it is known</param>
-void nextTrichordRow(int* permutation, int trichordTable[12][12])
+static void nextBabbittTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	// assume that the permutation is valid
 	int validPermutation = -1;
@@ -331,7 +224,7 @@ void nextTrichordRow(int* permutation, int trichordTable[12][12])
 			permutation[i] = smallestRight;
 			smallestRight++;
 		}
-		validPermutation = isValidTrichordRow(permutation, trichordTable);
+		validPermutation = isValidBabbittTrichordRow(permutation, trichordTable);
 	} while (validPermutation > -1);
 }
 
@@ -339,11 +232,11 @@ void nextTrichordRow(int* permutation, int trichordTable[12][12])
 /// Writes found generators to file
 /// </summary>
 /// <param name="found">A vector of found generators</param>
-void writeTrichordRowsToFile(std::string path, std::vector<int*> found)
+static void writeBabbittTrichordRowsToFile(std::string path, std::vector<int*> found)
 {
 	std::ofstream file;
 	file.open(path);
-	file << "{\n    \"allTrichordRows\": [\n";
+	file << "{\n    \"allTrichordBabbittRows\": [\n";
 	for (int i = 0; i < found.size() - 1; i++)
 	{
 		file << "        [";

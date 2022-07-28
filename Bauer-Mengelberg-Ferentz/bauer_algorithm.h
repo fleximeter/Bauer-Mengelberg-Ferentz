@@ -202,7 +202,7 @@ static void nextPermutation(int* permutation)
 static void writeToFile(std::string path, std::vector<int*> found)
 {
 	std::ofstream file;
-	file.open("D:\\eleven_interval.json");
+	file.open(path);
 	file << "{\n    \"elevenIntervalRowGenerators\": [\n";
 	for (int i = 0; i < found.size() - 1; i++)
 	{
