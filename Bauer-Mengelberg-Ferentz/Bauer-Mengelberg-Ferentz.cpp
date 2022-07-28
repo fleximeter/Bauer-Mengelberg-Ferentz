@@ -23,9 +23,10 @@
 */
 
 #include "bauer_algorithm.h"
+#include "bauer_trichord.h"
 
 int main()
 {
-	generateAllIntervalRows("D:\\eleven_interval.json");
+	generateAllTrichordRows("D:\\all_trichord.json");
 	return 0;
 }

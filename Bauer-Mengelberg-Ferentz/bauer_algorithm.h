@@ -1,5 +1,5 @@
 /*
-* File: bauer-algorithm.h
+* File: bauer_algorithm.h
 * Author: Jeff Martin
 * 
 * This file contains functionality for running the Bauer-Mengelberg-Ferentz
@@ -28,11 +28,12 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 void generateAllIntervalRows(std::string destinationFile);
 int isValidPermutation(int* permutation);
 void nextPermutation(int* permutation);
-void writeToFile(std::string path, int** found, int numFound);
+void writeToFile(std::string path, std::vector<int*> found);
 
 /// <summary>
 /// Generates the all-interval rows
@@ -40,9 +41,7 @@ void writeToFile(std::string path, int** found, int numFound);
 void generateAllIntervalRows(std::string destinationFile)
 {
 	int permutation[11] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
-	int numFound = 0;
-	int sizeFound = 256;
-	int** found = new int* [sizeFound];
+	std::vector<int*> found;
 
 	std::cout << "Starting...\n";
 	nextPermutation(permutation);
@@ -50,37 +49,24 @@ void generateAllIntervalRows(std::string destinationFile)
 	// consider each possible permutation
 	while (permutation[0] < 6)
 	{
-		// if it is time to resize the array of found row generators,
-		// resize it
-		if (numFound >= sizeFound)
-		{
-			int** newFound = new int* [sizeFound * 2];
-			for (int i = 0; i < numFound; i++)
-				newFound[i] = found[i];
-			delete[] found;
-			found = newFound;
-			sizeFound *= 2;
-		}
-
 		// add the new generator to the array
-		found[numFound] = new int[11];
+		int *newFound = new int[11];
 		for (int i = 0; i < 11; i++)
-			found[numFound][i] = permutation[i];
-		numFound++;
+			newFound[i] = permutation[i];
+		found.push_back(newFound);
 
 		// move to the next permutation
 		nextPermutation(permutation);
 	}
 
 	// export the row generators
-	writeToFile(destinationFile, found, numFound);
+	writeToFile(destinationFile, found);
 
 	// cleanup
-	for (int i = 0; i < numFound; i++)
+	for (int i = 0; i < found.size(); i++)
 		delete[] found[i];
-	delete[] found;
 
-	std::cout << "Done. Found " << numFound << " row generators.\n";
+	std::cout << "Done. Found " << found.size()  << " row generators.\n";
 }
 
 /// <summary>
@@ -88,7 +74,7 @@ void generateAllIntervalRows(std::string destinationFile)
 /// </summary>
 /// <param name="permutation">A permutation</param>
 /// <returns>The index of the partial sum that failed, or -1 if the permutation is valid</returns>
-int isValidPermutation(int* permutation)
+static int isValidPermutation(int* permutation)
 {
 	int sums[12] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	int returnVal = -1;
@@ -114,7 +100,7 @@ int isValidPermutation(int* permutation)
 /// </summary>
 /// <param name="permutation">The permutation</param>
 /// <param name="criticalIndex">The critical index, if it is known</param>
-void nextPermutation(int* permutation)
+static void nextPermutation(int* permutation)
 {
 	// assume that the permutation is valid
 	int validPermutation = -1;
@@ -212,25 +198,25 @@ void nextPermutation(int* permutation)
 /// <summary>
 /// Writes found generators to file
 /// </summary>
-/// <param name="found">An array of found generators</param>
-void writeToFile(std::string path, int** found, int numFound)
+/// <param name="found">A vector of found generators</param>
+static void writeToFile(std::string path, std::vector<int*> found)
 {
 	std::ofstream file;
 	file.open("D:\\eleven_interval.json");
 	file << "{\n    \"elevenIntervalRowGenerators\": [\n";
-	for (int i = 0; i < numFound - 1; i++)
+	for (int i = 0; i < found.size() - 1; i++)
 	{
 		file << "        [";
 		for (int j = 0; j < 10; j++)
 			file << found[i][j] << ", ";
 		file << found[i][10] << "],\n";
 	}
-	if (numFound > 0)
+	if (found.size() > 0)
 	{
 		file << "        [";
 		for (int j = 0; j < 10; j++)
-			file << found[numFound - 1][j] << ", ";
-		file << found[numFound - 1][10] << "]\n";
+			file << found[found.size() - 1][j] << ", ";
+		file << found[found.size() - 1][10] << "]\n";
 	}
 	file << "    ]\n}\n";
 	file.close();
