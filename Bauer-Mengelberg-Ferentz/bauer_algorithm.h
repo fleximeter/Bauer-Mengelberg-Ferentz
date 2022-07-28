@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 
-void generateAllIntervalRows(std::string destinationFile);
+void generateAllIntervalRowGenerators(std::string destinationFile);
 int isValidPermutation(int* permutation);
 void nextPermutation(int* permutation);
 void writeToFile(std::string path, std::vector<int*> found);
@@ -38,7 +38,7 @@ void writeToFile(std::string path, std::vector<int*> found);
 /// <summary>
 /// Generates the all-interval rows
 /// </summary>
-void generateAllIntervalRows(std::string destinationFile)
+void generateAllIntervalRowGenerators(std::string destinationFile)
 {
 	int permutation[11] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
 	std::vector<int*> found;

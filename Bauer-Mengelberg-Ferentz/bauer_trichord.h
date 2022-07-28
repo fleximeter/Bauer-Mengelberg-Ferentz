@@ -50,8 +50,9 @@ void generateAllTrichordRows(std::string destinationFile)
 	std::cout << "Starting...\n";
 	nextTrichordRow(permutation, trichordTable);
 
-	// consider each possible permutation
-	while (permutation[0] < 1)
+	// consider each possible permutation. There are no permutations that begin with 06...,
+	// so we can just stop once the second digit is greater than 5.
+	while (permutation[1] < 6)
 	{
 		// add the new generator to the array
 		int* newFound = new int[12];
@@ -81,14 +82,6 @@ void generateAllTrichordRows(std::string destinationFile)
 int isValidTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	int trichords[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	int trichordTable1[12][12];
-	int permutation1[12];
-	for (int i = 0; i < 12; i++)
-	{
-		permutation1[i] = permutation[i];
-		for (int j = 0; j < 12; j++)
-			trichordTable1[i][j] = trichordTable[i][j];
-	}
 
 	// Calculate the intervals, wrapping around
 	int intervals[12];

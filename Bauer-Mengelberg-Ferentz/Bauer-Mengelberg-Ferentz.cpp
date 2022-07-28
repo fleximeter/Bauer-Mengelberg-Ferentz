@@ -29,6 +29,6 @@
 
 int main()
 {
-	generateTenTrichordRows("D:\\ten_trichord.json");
+	generateAllIntervalRowGenerators("C:\\all_interval.json");
 	return 0;
 }

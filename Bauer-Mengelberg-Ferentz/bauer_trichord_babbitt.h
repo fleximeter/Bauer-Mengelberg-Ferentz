@@ -52,8 +52,9 @@ void generateBabbittAllTrichordRows(std::string destinationFile)
 	std::cout << "Starting...\n";
 	nextBabbittTrichordRow(permutation, trichordTable);
 
-	// consider each possible permutation
-	while (permutation[0] < 1)
+	// consider each possible permutation up to 065...
+	// no permutations begin with 066... so we stop there
+	while (permutation[1] < 6 || permutation[2] < 6)
 	{
 		// add the new generator to the array
 		int* newFound = new int[12];
@@ -83,18 +84,10 @@ void generateBabbittAllTrichordRows(std::string destinationFile)
 static int isValidBabbittTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	int trichords[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	int trichordTable1[12][12];
-	int permutation1[12];
-	for (int i = 0; i < 12; i++)
-	{
-		permutation1[i] = permutation[i];
-		for (int j = 0; j < 12; j++)
-			trichordTable1[i][j] = trichordTable[i][j];
-	}
 
 	// Calculate the intervals
 	int intervals[11];
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 	{
 		intervals[i] = permutation[i + 1] - permutation[i];
 		if (intervals[i] < 0)
@@ -108,7 +101,7 @@ static int isValidBabbittTrichordRow(int* permutation, int trichordTable[12][12]
 	{
 		int idx = trichordTable[intervals[i]][intervals[i + 1]] - 1;
 		// we can't allow set-classes [036] and [048]
-		if (idx == 10 || idx == 12)
+		if (idx == 9 || idx == 11)
 		{
 			if (i < 10)
 				return i + 2;

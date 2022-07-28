@@ -51,8 +51,9 @@ void generateTenTrichordRows(std::string destinationFile)
 	std::cout << "Starting...\n";
 	nextTenTrichordRow(permutation, trichordTable);
 
-	// consider each possible permutation
-	while (permutation[0] < 1)
+	// consider each possible permutation up to 065...
+	// no permutations begin with 066... so we stop there
+	while (permutation[1] < 6 || permutation[2] < 6)
 	{
 		// add the new generator to the array
 		int* newFound = new int[12];
@@ -82,14 +83,6 @@ void generateTenTrichordRows(std::string destinationFile)
 int isValidTenTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	int trichords[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	int trichordTable1[12][12];
-	int permutation1[12];
-	for (int i = 0; i < 12; i++)
-	{
-		permutation1[i] = permutation[i];
-		for (int j = 0; j < 12; j++)
-			trichordTable1[i][j] = trichordTable[i][j];
-	}
 
 	// Calculate the intervals
 	int intervals[11];
@@ -227,7 +220,7 @@ void writeTenTrichordRowsToFile(std::string path, std::vector<int*> found)
 {
 	std::ofstream file;
 	file.open(path);
-	file << "{\n    \"tenTrichordRowGenerators\": [\n";
+	file << "{\n    \"tenTrichordRows\": [\n";
 	for (int i = 0; i < found.size() - 1; i++)
 	{
 		file << "        [";
