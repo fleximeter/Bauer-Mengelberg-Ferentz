@@ -38,6 +38,7 @@ void writeToFile(std::string path, std::vector<int*> found);
 /// <summary>
 /// Generates the all-interval rows
 /// </summary>
+/// <param name="destinationFile">The destination file</param>
 void generateAllIntervalRowGenerators(std::string destinationFile)
 {
 	int permutation[11] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
@@ -70,10 +71,10 @@ void generateAllIntervalRowGenerators(std::string destinationFile)
 }
 
 /// <summary>
-/// Determines if a permutation is valid
+/// Determines if an eleven-interval permutation is a row generator
 /// </summary>
-/// <param name="permutation">A permutation</param>
-/// <returns>The index of the partial sum that failed, or -1 if the permutation is valid</returns>
+/// <param name="permutation">An eleven-interval permutation</param>
+/// <returns>The index of the partial sum that failed, or -1 if the permutation is a row generator</returns>
 static int isValidPermutation(int* permutation)
 {
 	int sums[12] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
@@ -96,10 +97,9 @@ static int isValidPermutation(int* permutation)
 }
 
 /// <summary>
-/// Updates the permutation to the next valid one
+/// Updates the eleven-interval permutation to the next valid row generator
 /// </summary>
 /// <param name="permutation">The permutation</param>
-/// <param name="criticalIndex">The critical index, if it is known</param>
 static void nextPermutation(int* permutation)
 {
 	// assume that the permutation is valid
@@ -196,8 +196,9 @@ static void nextPermutation(int* permutation)
 }
 
 /// <summary>
-/// Writes found generators to file
+/// Writes found eleven-interval row generators to file
 /// </summary>
+/// <param name="path">The file to write to</param>
 /// <param name="found">A vector of found generators</param>
 static void writeToFile(std::string path, std::vector<int*> found)
 {

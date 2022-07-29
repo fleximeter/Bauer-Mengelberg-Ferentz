@@ -38,7 +38,7 @@ void nextTenTrichordRow(int* permutation, int trichordTable[12][12]);
 void writeTenTrichordRowsToFile(std::string path, std::vector<int*> found);
 
 /// <summary>
-/// Generates the all-interval rows
+/// Generates the ten-trichord rows
 /// </summary>
 void generateTenTrichordRows(std::string destinationFile)
 {
@@ -76,10 +76,10 @@ void generateTenTrichordRows(std::string destinationFile)
 }
 
 /// <summary>
-/// Determines if a permutation is valid
+/// Determines if a twelve-tone row is a ten-trichord row
 /// </summary>
-/// <param name="permutation">A permutation</param>
-/// <returns>The index of the pc that failed, or -1 if the permutation is valid</returns>
+/// <param name="permutation">A twelve-tone row</param>
+/// <returns>The index of the pc that failed, or -1 if the row is a ten-trichord row</returns>
 int isValidTenTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	int trichords[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -113,10 +113,10 @@ int isValidTenTrichordRow(int* permutation, int trichordTable[12][12])
 }
 
 /// <summary>
-/// Updates the permutation to the next valid one
+/// Updates the row to the next valid ten-trichord row
 /// </summary>
 /// <param name="permutation">The permutation</param>
-/// <param name="criticalIndex">The critical index, if it is known</param>
+/// <param name="trichordTable">A table of spacing intervals for the twelve trichords</param>
 void nextTenTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	// assume that the permutation is valid
@@ -213,9 +213,10 @@ void nextTenTrichordRow(int* permutation, int trichordTable[12][12])
 }
 
 /// <summary>
-/// Writes found generators to file
+/// Writes found ten trichord rows to file
 /// </summary>
-/// <param name="found">A vector of found generators</param>
+/// <param name="path">The file to write to</param>
+/// <param name="found">A vector of found rows</param>
 void writeTenTrichordRowsToFile(std::string path, std::vector<int*> found)
 {
 	std::ofstream file;

@@ -39,7 +39,7 @@ void nextBabbittTrichordRow(int* permutation, int trichordTable[12][12]);
 void writeBabbittTrichordRowsToFile(std::string path, std::vector<int*> found);
 
 /// <summary>
-/// Generates the all-interval rows
+/// Generates the Babbitt all-trichord rows
 /// </summary>
 void generateBabbittAllTrichordRows(std::string destinationFile)
 {
@@ -77,10 +77,10 @@ void generateBabbittAllTrichordRows(std::string destinationFile)
 }
 
 /// <summary>
-/// Determines if a permutation is valid
+/// Determines if a twelve-tone row is a Babbitt all-trichord row
 /// </summary>
-/// <param name="permutation">A permutation</param>
-/// <returns>The index of the pc that failed, or -1 if the permutation is valid</returns>
+/// <param name="permutation">A twelve-tone row</param>
+/// <returns>The index of the pc that failed, or -1 if the row is a Babbitt all-trichord row</returns>
 static int isValidBabbittTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	int trichords[12] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -122,10 +122,10 @@ static int isValidBabbittTrichordRow(int* permutation, int trichordTable[12][12]
 }
 
 /// <summary>
-/// Updates the permutation to the next valid one
+/// Updates the twelve-tone row to the next valid Babbitt all-trichord row
 /// </summary>
 /// <param name="permutation">The permutation</param>
-/// <param name="criticalIndex">The critical index, if it is known</param>
+/// <param name="trichordTable">A table of spacing intervals for the twelve trichords</param>
 static void nextBabbittTrichordRow(int* permutation, int trichordTable[12][12])
 {
 	// assume that the permutation is valid
@@ -222,9 +222,10 @@ static void nextBabbittTrichordRow(int* permutation, int trichordTable[12][12])
 }
 
 /// <summary>
-/// Writes found generators to file
+/// Writes found all-trichord Babbitt rows to file
 /// </summary>
-/// <param name="found">A vector of found generators</param>
+/// <param name="path">The file to write to</param>
+/// <param name="found">A vector of found rows</param>
 static void writeBabbittTrichordRowsToFile(std::string path, std::vector<int*> found)
 {
 	std::ofstream file;

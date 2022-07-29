@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bauer-Mengelberg-Ferentz.cpp" />
+    <ClCompile Include="bauer_mengelberg_ferentz.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bauer_algorithm.h" />
