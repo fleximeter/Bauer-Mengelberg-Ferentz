@@ -30,5 +30,8 @@
 int main()
 {
 	generateAllIntervalRowGenerators("C:\\all_interval.json");
+	generateAllTrichordRows("C:\\all_trichord.json");
+	generateBabbittAllTrichordRows("C:\\all_trichord_babbitt.json");
+	generateTenTrichordRows("C:\\ten_trichord.json");
 	return 0;
 }
